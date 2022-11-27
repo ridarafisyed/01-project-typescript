@@ -5,7 +5,8 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "tsc && node lib/index.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -18,5 +19,16 @@
 	"devDependencies": {
 		"@types/inquirer": "^9.0.3",
 		"typescript": "^4.9.3"
-	}
+	},
+	"directories": {
+		"lib": "lib"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ridarafisyed/TypeScript-project00_calculator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ridarafisyed/TypeScript-project00_calculator/issues"
+	},
+	"homepage": "https://github.com/ridarafisyed/TypeScript-project00_calculator#readme"
 }
