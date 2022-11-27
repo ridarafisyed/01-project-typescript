@@ -3,103 +3,229 @@
 import { add, sub, multiply, divide } from "./module/basicCalculation.js";
 import inquirer from "inquirer";
 import chalk from "chalk";
-import Choices from "inquirer/lib/objects/choices.js";
+import figlet from "figlet";
+// import Choices from "inquirer/lib/objects/choices.js";
+import chalkAnimation from "chalk-animation";
+console.clear();
 
-async function calculator() {
-	let iterate = true;
-	const welcome = `
-            ----->>>>> Welcome to the Calculator <<<<<-----`;
+const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
+async function welcomeMsg() {
+	const welcome = chalkAnimation.rainbow(
+		figlet.textSync("<<< Calculator >>>", {
+			font: "Standard",
+			horizontalLayout: "default",
+			verticalLayout: "default",
+			width: 80,
+			whitespaceBreak: true,
+		}),
+	);
 
-	while (iterate) {
-		const calulatorMessage = `
-    ${chalk.yellowBright("**Please Select Operation")}
+	await sleep();
+	welcome.stop();
+}
 
-    ${chalk.cyan(`
-                -- For Addition (+) press: ${chalk.bold("+")}
-                -- For Substraction (-) press: ${chalk.bold("-")}
-                -- For Multiplication (x) press: ${chalk.bold("*")}
-                -- For Division (/) press : ${chalk.bold("/")}"`)}`;
-		console.log(chalk.greenBright.bold(welcome));
-		console.log(calulatorMessage);
-		let operation = await inquirer.prompt([
+function validateNumber(input: any): string | boolean {
+	if (isNaN(input)) {
+		return "Invalid Number!";
+	} else {
+		return true;
+	}
+}
+type Answers = {
+	firstNumber: string;
+	secondNumber: string;
+	operations:
+		| "+"
+		| "-"
+		| "x"
+		| "÷"
+		| "%"
+		| "^"
+		| "√"
+		| "3√"
+		| "sin"
+		| "cos"
+		| "tan"
+		| "π"
+		| "log"
+		| "e"
+		| "1/2√"
+		| "3√";
+};
+
+let checkConfirm: boolean = false;
+async function getInput() {
+	do {
+		const answers: Answers = await inquirer.prompt([
 			{
-				name: "sign",
-				type: "string",
-				message: "Please enter Operation",
+				type: "input",
+				name: "firstNumber",
+				message: "Enter first number",
+				validate: validateNumber,
+			},
+			{
+				type: "list",
+				choices: [
+					"+",
+					"-",
+					"x",
+					"÷",
+					"%",
+					"^",
+					"√",
+					"3√",
+					"sin",
+					"cos",
+					"tan",
+					"π",
+					"log",
+					"e",
+					"1/2√",
+					"3√",
+				],
+				name: "operations",
+				message: "Choose operation",
+			},
+			{
+				type: "input",
+				name: "secondNumber",
+				message: "Enter second number",
+				validate: validateNumber,
 			},
 		]);
+		const firstNumber = Number(answers.firstNumber);
+		const secondNumber = Number(answers.secondNumber);
 
-		let num1 = await inquirer.prompt([
-			{
-				name: "digit",
-				type: "number",
-				message: "Please enter 1st Number",
-			},
-		]);
-
-		let num2 = await inquirer.prompt([
-			{
-				name: "digit",
-				type: "number",
-				message: "Please enter 2nd Number",
-			},
-		]);
-		switch (operation.sign) {
+		switch (answers.operations) {
 			case "+":
 				console.log(
-					chalk.redBright(
-						`your equation is ${num1.digit} + ${num2.digit} = ${add(
-							num1.digit,
-							num2.digit,
-						)}`,
-					),
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${
+						firstNumber + secondNumber
+					}`,
 				);
 				break;
 			case "-":
 				console.log(
-					chalk.redBright(
-						`your equation is ${num1.digit} - ${num2.digit} = ${sub(
-							num1.digit,
-							num2.digit,
-						)}`,
-					),
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${
+						firstNumber - secondNumber
+					}`,
 				);
 				break;
-			case "*":
+			case "x":
 				console.log(
-					chalk.redBright(
-						`your equation is ${num1.digit} x ${num2.digit} = ${multiply(
-							num1.digit,
-							num2.digit,
-						)}`,
-					),
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${
+						firstNumber * secondNumber
+					}`,
 				);
 				break;
-			case "/":
+			case "÷":
 				console.log(
-					chalk.redBright(
-						`your equation is ${num1.digit} / ${num2.digit} = ${divide(
-							num1.digit,
-							num2.digit,
-						)}`,
-					),
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${(
+						firstNumber / secondNumber
+					).toFixed(4)}`,
 				);
 				break;
+			case "^":
+				console.log(
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${
+						firstNumber ^ secondNumber
+					}`,
+				);
+				break;
+			case "√":
+				console.log(
+					`Equation : ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.sqrt(firstNumber).toFixed(4)}`,
+				);
+				break;
+			case "%":
+				console.log(
+					`Equation : ${firstNumber} ${answers.operations} ${secondNumber} = ${
+						firstNumber / 100
+					}`,
+				);
+				break;
+			case "3√":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.sqrt(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "sin":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.sin(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "cos":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.cos(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "tan":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.tan(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "π":
+				console.log(
+					`Equation: ${firstNumber} ${answers.operations} ${secondNumber} = ${(
+						firstNumber * Math.PI
+					).toPrecision(4)}`,
+				);
+				break;
+			case "log":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.log2(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "e":
+				console.log(
+					`Equation: ${firstNumber} ${
+						answers.operations
+					} ${secondNumber} = ${Math.exp(firstNumber).toPrecision(4)}`,
+				);
+				break;
+			case "1/2√":
+				console.log(
+					`Equation: ${firstNumber} ${answers.operations} ${secondNumber} = ${(
+						firstNumber / Math.SQRT1_2
+					).toPrecision(4)}`,
+				);
+				break;
+			case "3√":
+				console.log(
+					`Equation: ${firstNumber} ${answers.operations} ${secondNumber} = ${(
+						firstNumber / Math.sqrt(3)
+					).toPrecision(4)}`,
+				);
+				break;
+
 			default:
 				break;
 		}
-		let userPick = await inquirer.prompt([
+		const isConfirm = await inquirer.prompt([
 			{
-				name: "ans",
-				type: "number",
-				message: "If you want to continue press any key... for exit press 1.",
+				name: "confirm",
+				type: "confirm",
+				message: "Do you want to try again",
 			},
 		]);
+		checkConfirm = isConfirm.confirm;
 
-		if (userPick.ans === 1) {
-			break;
-		} else continue;
-	}
+		console.log("\n \n \n");
+	} while (checkConfirm);
 }
 
-calculator();
+welcomeMsg();
+
+getInput();
